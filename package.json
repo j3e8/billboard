@@ -1,0 +1,19 @@
+{
+  "name": "billboard",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "db-migrate up --config config/db-migrate.json --migrations-dir src/migrations"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "config": "^1.24.0",
+    "db-migrate": "^0.10.0-beta.20",
+    "db-migrate-mysql": "^1.1.10",
+    "moment": "^2.17.1",
+    "request": "^2.79.0"
+  }
+}

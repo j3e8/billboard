@@ -1,0 +1,1 @@
+select a.artistName, sum(101 - r.rank) as score from rankings as r inner join songs as s on r.songId=s.id inner join artists as a on s.artistId=a.id group by a.artistName order by score desc limit 20;
