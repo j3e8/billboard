@@ -1,0 +1,1 @@
+select a.artistName, s.songTitle, numWeeks from (select songId, count(week) as numWeeks from rankings group by songId) as r inner join songs as s on r.songId=s.id inner join artists as a on s.artistId=a.id order by numWeeks desc limit 10;
