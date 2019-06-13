@@ -5,11 +5,7 @@ let db = require('../connections/mysql_database.js');
 const initialUrl = 'http://www.billboard.com/charts/hot-100/2017-01-21';
 const baseUrl = 'http://www.billboard.com/charts/hot-100/';
 
-const song_r = /<article class="chart-row(.|[\r\n])+?>((.|[\r\n])+?)<\/article>/gmi;
-
-const rank_r = /<span class="chart-row__current-week">([\d]+)<\/span>/mi;
-const title_r = /<h2 class="chart-row__song">(.+?)<\/h2>/mi;
-const artist_r = /<([\w]+) class="chart-row__artist".*?>[\s\r\n]*(.+?)[\s\r\n]*<\/\1>/mi;
+const reggie = /data-rank="([\d]+)"\s*data-artist="(.+?)"\s*data-title="(.+?)"/mgi;
 
 const initialDate = moment(process.argv[2]).toDate();
 const endDate = moment(process.argv[3]).toDate();
@@ -75,29 +71,14 @@ function dateToString(date) {
 function parseStandings(html) {
   let standings = [];
   let match;
-  while(match = song_r.exec(html)) {
-    let standing = parseIndividualStanding(match[2]);
-    if (standing) {
-      standings.push(standing);
-    }
+  while (match = reggie.exec(html)) {
+    standings.push({
+      ranking: match[1],
+      artist: match[2],
+      title: match[3],
+    });
   }
   return Promise.resolve(standings);
-}
-
-function parseIndividualStanding(html) {
-  let rank_match = rank_r.exec(html);
-  let title_match = title_r.exec(html);
-  let artist_match = artist_r.exec(html);
-
-  if (rank_match && artist_match && title_match) {
-    let standing = {
-      rank: htmlEntityReplace(rank_match[1]),
-      artist: htmlEntityReplace(artist_match[2]),
-      title: htmlEntityReplace(title_match[1])
-    };
-    return standing;
-  }
-  return null;
 }
 
 function insertStandings(date, list) {
@@ -121,7 +102,7 @@ function insertStanding(date, standing) {
     return findOrInsertSong(artist.id, standing.title)
   })
   .then((song) => {
-    return insertRanking(date, song.id, standing.rank)
+    return insertRanking(date, song.id, standing.ranking)
   });
 }
 
@@ -233,12 +214,12 @@ function insertSong(artistId, songTitle) {
 
 
 
-function insertRanking(date, songId, rank) {
+function insertRanking(date, songId, r) {
   return new Promise((resolve, reject) => {
     let ranking = {
       week: moment(date).format('YYYY-MM-DD HH:mm:ss'),
       songId: songId,
-      rank: rank
+      ranking: r
     };
 
     db.query(`REPLACE INTO rankings

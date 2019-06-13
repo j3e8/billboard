@@ -1,0 +1,22 @@
+
+{
+  "env": {
+    "NODE_TLS_REJECT_UNAUTHORIZED": 0
+  },
+
+  "database": {
+    "host": "localhost",
+    "user": "root",
+    "password" : "",
+    "database": "billboard",
+    "driver": "mysql",
+    "multipleStatements": true,
+    "timezone": "UTC+0"
+  },
+
+  "server": {
+    "hostname": "localhost",
+    "port": 4000,
+    "protocol": "http:"
+  }
+}

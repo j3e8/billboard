@@ -67,10 +67,13 @@ function createRankingsTable(db) {
       (
         week timestamp,
         songId int not null,
-        rank tinyint,
+        ranking tinyint,
         PRIMARY KEY (week, songId)
       )`
-    , function() {
+    , function(err) {
+      if (err) {
+        console.error(err);
+      }
       resolve();
     });
   });

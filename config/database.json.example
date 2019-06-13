@@ -1,0 +1,11 @@
+{
+  "dev": {
+    "host": "localhost",
+    "user": "root",
+    "password" : "",
+    "database": "billboard",
+    "driver": "mysql",
+    "multipleStatements": true,
+    "timezone": "UTC+0"
+  }
+}
