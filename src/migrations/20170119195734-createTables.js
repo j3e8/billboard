@@ -65,7 +65,7 @@ function createRankingsTable(db) {
     console.log("creating rankings table");
     db.runSql(`CREATE TABLE IF NOT EXISTS rankings
       (
-        week timestamp,
+        week datetime,
         songId int not null,
         ranking tinyint,
         PRIMARY KEY (week, songId)
