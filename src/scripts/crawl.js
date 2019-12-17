@@ -32,8 +32,9 @@ function crawl(date, endDate) {
   .then((list) => insertStandings(date, list))
   .then(() => {
     let newDate = moment(date).subtract(7, 'days').toDate();
-    return crawl(newDate, endDate);
-  });
+    return sleep(5000)
+      .then(() => crawl(newDate, endDate));
+  })
 }
 
 function loadOneWeek(date) {
@@ -236,4 +237,12 @@ function insertRanking(date, songId, r) {
 
 function htmlEntityReplace(str) {
   return str.replace('&amp;', '&').replace('&#039;', '\'');
+}
+
+function sleep(ms) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve();
+    }, ms);
+  });
 }
