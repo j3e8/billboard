@@ -5,7 +5,8 @@ let db = require('../connections/mysql_database.js');
 const initialUrl = 'http://www.billboard.com/charts/hot-100/2017-01-21';
 const baseUrl = 'http://www.billboard.com/charts/hot-100/';
 
-const reggie = /data-rank="([\d]+)"\s*data-artist="(.+?)"\s*data-title="(.+?)"/mgi;
+// const reggie = /data-rank="([\d]+)"\s*data-artist="(.+?)"\s*data-title="(.+?)"/mgi; // old
+const reggie = /chart-element__rank__number[^>]*>([0-9]+)[\s\S]*?chart-element__information__song[^>]*>([^<]+)[\s\S]*?chart-element__information__artist[^>]*>([^<]+)/mgi;
 
 const initialDate = moment(process.argv[2]).toDate();
 const endDate = moment(process.argv[3]).toDate();
@@ -75,8 +76,8 @@ function parseStandings(html) {
   while (match = reggie.exec(html)) {
     standings.push({
       ranking: match[1],
-      artist: match[2],
-      title: match[3],
+      title: match[2],
+      artist: match[3],
     });
   }
   return Promise.resolve(standings);
